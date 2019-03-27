@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HFM
@@ -71,6 +72,94 @@ namespace HFM
 					equal++;
 			}
 			return (200 * less + 100 * equal) / (list.Count() * 2);
+		}
+
+		internal void Link()
+		{
+			LinkProximalSynapses();
+			LinkBasalSynapses();
+			LinkApicalSynapses();
+		}
+
+		private void LinkApicalSynapses()
+		{
+			var random = new Random();
+			var pool = new List<Neuron>();
+			var eligible = Region.Brain.Regions
+								 .Where(region => region.Level >= Region.Level)
+								 .Where(region => !region.Equals(this))
+								 .SelectMany(region => region.Neurons);
+			var maxdistance = eligible.Max(neuron => neuron.Coordinates.GetDistance(this));
+			foreach (var neuron in eligible)
+			{
+				var distance = neuron.Coordinates.GetDistance(this);
+				if (distance == 0) continue;
+				for (int i = 0; i < Math.Pow(maxdistance / distance, 2); i++) // neurons tend to link to nearby peers
+				{
+					pool.Add(neuron);
+				}
+			}
+			for (int i = 0; i < Constants.NUMBER_OF_BASAL_SYNAPSES; i++)
+			{
+				var target = pool[random.Next(pool.Count)];
+				pool.RemoveAll(neuron => neuron == target);
+				BasalSynapses.Add(new Synapse(target));
+			}
+		}
+
+		private void LinkBasalSynapses()
+		{
+			var random = new Random();
+			var pool = new List<Neuron>();
+			var maxdistance = Region.Neurons.Max(neuron => neuron.Coordinates.GetDistance(this));
+			foreach (var neuron in Region.Neurons)
+			{
+				var distance = neuron.Coordinates.GetDistance(this);
+				if (distance == 0) continue;
+				for (int i = 0; i < Math.Pow(maxdistance / distance, 2); i++) // neurons tend to link to nearby peers
+				{
+					pool.Add(neuron);
+				}
+			}
+			for (int i = 0; i < Constants.NUMBER_OF_BASAL_SYNAPSES; i++)
+			{
+				var target = pool[random.Next(pool.Count)];
+				pool.RemoveAll(neuron => neuron == target);
+				BasalSynapses.Add(new Synapse(target));
+			}
+		}
+
+		private void LinkProximalSynapses()
+		{
+			var random = new Random();
+			var pool = new List<Neuron>();
+			IEnumerable<Neuron> eligible;
+			if (Region.Level == 0)
+			{
+				throw new NotImplementedException(); // Connect to SDR
+			}
+			else
+			{
+				eligible = Region.Brain.Regions
+									 .Where(region => region.Level < Region.Level) // TODO: only select some regions, those nearby
+									 .SelectMany(region => region.Neurons);
+			}
+			var maxdistance = eligible.Max(neuron => neuron.Coordinates.GetDistance(this));
+			foreach (var neuron in eligible)
+			{
+				var distance = neuron.Coordinates.GetDistance(this);
+				if (distance == 0) continue;
+				for (int i = 0; i < Math.Pow(maxdistance / distance, 2); i++) // neurons tend to link to nearby peers
+				{
+					pool.Add(neuron);
+				}
+			}
+			for (int i = 0; i < Constants.NUMBER_OF_BASAL_SYNAPSES; i++)
+			{
+				var target = pool[random.Next(pool.Count)];
+				pool.RemoveAll(neuron => neuron == target);
+				BasalSynapses.Add(new Synapse(target));
+			}
 		}
 	}
 }

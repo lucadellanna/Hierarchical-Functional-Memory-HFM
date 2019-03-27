@@ -6,22 +6,43 @@ namespace HFM
 {
 	public class Region
 	{
-		public Region(List<Stimulus> environment, int i)
+		public Region(Brain brain, List<Stimulus> environment, int i)
 		{
+			Brain = brain;
 			Environment = environment;
-			Index = i;
+			Level = i;
 		}
 
-		public int Index;
+		public int Level;
+		public Brain Brain;
 		public List<Neuron> Neurons = new List<Neuron>();
+		public List<Stimulus> Environment = new List<Stimulus>();
 		public List<SensorialDimension> Dimensions = new List<SensorialDimension>();
 
 		internal void CreateNeurons()
 		{
-			throw new NotImplementedException();
+			var numberOfColumns = Dimensions.Sum(dimension => dimension.Bandwidth);
+			var x = Math.Ceiling(Math.Sqrt(numberOfColumns));
+			var y = Math.Ceiling(numberOfColumns / x);
+			for (int i = 0; i < x; i++)
+			{
+				for (int j = 0; j < y; j++)
+				{
+					for (int z = 0; z < Constants.NEURONS_PER_MINICOLUMN; z++)
+					{
+						Neurons.Add(new Neuron(this, i, j, z));
+					}
+				}
+			}
 		}
 
-		public List<Stimulus> Environment = new List<Stimulus>();
+		internal void LinkNeurons()
+		{
+			foreach (var neuron in Neurons)
+			{
+				neuron.Link();
+			}
+		}
 
 		public void CreateDimensions(IEnumerable<Stimulus> stimuli)
 		{

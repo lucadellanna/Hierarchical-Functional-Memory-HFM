@@ -9,11 +9,16 @@ namespace HFM
 		public Brain(List<Stimulus> environment)
 		{
 			Environment = environment;
-			Regions.Add(new Region(environment, 0));
+			Regions.Add(new Region(this, environment, 0));
+			Regions.Add(new Region(this, environment, 1)); // TODO: this region's environment is different
 			foreach (var region in Regions)
 			{
 				region.CreateDimensions(Environment);
 				region.CreateNeurons();
+			}
+			foreach (var region in Regions)
+			{
+				region.LinkNeurons();
 			}
 		}
 

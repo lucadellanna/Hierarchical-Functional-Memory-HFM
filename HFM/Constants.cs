@@ -26,8 +26,6 @@ namespace HFM
 		public const int COLUMNAR_INHIBITION_DISTANCE = 5;
 
 		// NEURONS
-		public const int COLUMNATE_WIDTH = 5;
-		public const int COLUMNATE_LENGHT = 10;
 		public const int RECEPTIVE_FIELD_RADIUS = 5;
 		public const int NEURONS_PER_MINICOLUMN = 10;
 
