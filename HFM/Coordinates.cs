@@ -18,9 +18,8 @@ namespace HFM
 			return (int)Math.Round(distance, 0);
 		}
 
-		public int GetDistance(Coordinates coordinates)
-		{
-			return GetDistance(coordinates.X, coordinates.Y, coordinates.Z);
-		}
+		public int GetDistance(Coordinates coordinates) => GetDistance(coordinates.X, coordinates.Y, coordinates.Z);
+
+		public int GetDistance(Neuron neuron) => GetDistance(neuron.Coordinates);
 	}
 }

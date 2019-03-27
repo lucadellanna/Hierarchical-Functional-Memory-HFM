@@ -4,6 +4,8 @@ namespace HFM
 {
 	public static class Constants
 	{
+		// TODO: remove obsolete constants (not all are needed, some are vestiges of previous implementations)
+
 		// SENSORIAL DIMENSIONS
 		public const int SDR_OVERLAP = 2;
 
