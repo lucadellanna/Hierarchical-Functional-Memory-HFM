@@ -3,7 +3,7 @@ namespace HFM
 {
 	public class Synapse
 	{
-		public Synapse(Neuron axonFrom)
+		public Synapse(RegionNeuron axonFrom)
 		{
 			var random = new Random();
 			Permanence = GetRandomPermanence(random);
@@ -20,7 +20,7 @@ namespace HFM
 			return $"Synapse of permanence {Permanence} with {AxonFrom}";
 		}
 
-		public readonly Neuron AxonFrom;
+		public readonly RegionNeuron AxonFrom;
 
 		public bool IsActive { get { return AxonFrom.IsFiring && Permanence >= 0.7; } }
 

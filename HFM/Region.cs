@@ -15,7 +15,7 @@ namespace HFM
 
 		public int Level;
 		public Brain Brain;
-		public List<Neuron> Neurons = new List<Neuron>();
+		public List<RegionNeuron> Neurons = new List<RegionNeuron>();
 		public List<Stimulus> Environment = new List<Stimulus>();
 		public List<SensorialDimension> Dimensions = new List<SensorialDimension>();
 
@@ -30,10 +30,15 @@ namespace HFM
 				{
 					for (int z = 0; z < Constants.NEURONS_PER_MINICOLUMN; z++)
 					{
-						Neurons.Add(new Neuron(this, i, j, z));
+						Neurons.Add(new RegionNeuron(this, i, j, z));
 					}
 				}
 			}
+		}
+
+		internal void ProcessInput(SDR sDR)
+		{
+			throw new NotImplementedException();
 		}
 
 		internal void LinkNeurons()

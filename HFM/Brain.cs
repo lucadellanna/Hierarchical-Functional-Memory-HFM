@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace HFM
 {
@@ -24,8 +22,6 @@ namespace HFM
 
 		public void ProcessNextStimulus(Stimulus stimulus)
 		{
-			// TODO: write code to process the stimulus
-
 			foreach (var region in Regions)
 			{
 				foreach (var neuron in region.Neurons)

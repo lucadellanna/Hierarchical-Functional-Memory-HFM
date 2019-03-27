@@ -20,6 +20,6 @@ namespace HFM
 
 		public int GetDistance(Coordinates coordinates) => GetDistance(coordinates.X, coordinates.Y, coordinates.Z);
 
-		public int GetDistance(Neuron neuron) => GetDistance(neuron.Coordinates);
+		public int GetDistance(RegionNeuron neuron) => GetDistance(neuron.Coordinates);
 	}
 }

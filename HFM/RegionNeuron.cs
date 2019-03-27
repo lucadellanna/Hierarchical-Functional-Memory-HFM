@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace HFM
 {
-	public class Neuron
+	public class RegionNeuron
 	{
-		public Neuron(Region region, int x, int y, int z)
+		public RegionNeuron(Region region, int x, int y, int z)
 		{
 			Region = region;
 			Coordinates = new Coordinates(x, y, z);
@@ -19,9 +19,9 @@ namespace HFM
 		public List<Synapse> ApicalSynapses = new List<Synapse>();
 
 		// Receptive fields are lists of neurons whose firing influences the firing of this neuron
-		public List<Neuron> ProximalReceptiveField => ProximalSynapses.Select(x => x.AxonFrom).ToList();
-		public List<Neuron> BasalReceptiveField => BasalSynapses.Select(x => x.AxonFrom).ToList();
-		public List<Neuron> ApicalReceptiveField => ApicalSynapses.Select(x => x.AxonFrom).ToList();
+		public List<RegionNeuron> ProximalReceptiveField => ProximalSynapses.Select(x => x.AxonFrom).ToList();
+		public List<RegionNeuron> BasalReceptiveField => BasalSynapses.Select(x => x.AxonFrom).ToList();
+		public List<RegionNeuron> ApicalReceptiveField => ApicalSynapses.Select(x => x.AxonFrom).ToList();
 
 		public int FeedForwardScore => ProximalReceptiveField.Count(neuron => neuron.IsFiring);
 
@@ -84,7 +84,7 @@ namespace HFM
 		private void LinkApicalSynapses()
 		{
 			var random = new Random();
-			var pool = new List<Neuron>();
+			var pool = new List<RegionNeuron>();
 			var eligible = Region.Brain.Regions
 								 .Where(region => region.Level >= Region.Level)
 								 .Where(region => !region.Equals(this))
@@ -110,7 +110,7 @@ namespace HFM
 		private void LinkBasalSynapses()
 		{
 			var random = new Random();
-			var pool = new List<Neuron>();
+			var pool = new List<RegionNeuron>();
 			var maxdistance = Region.Neurons.Max(neuron => neuron.Coordinates.GetDistance(this));
 			foreach (var neuron in Region.Neurons)
 			{
@@ -132,18 +132,10 @@ namespace HFM
 		private void LinkProximalSynapses()
 		{
 			var random = new Random();
-			var pool = new List<Neuron>();
-			IEnumerable<Neuron> eligible;
-			if (Region.Level == 0)
-			{
-				throw new NotImplementedException(); // Region is at lowest level & thus connects to SDR
-			}
-			else
-			{
-				eligible = Region.Brain.Regions
+			var pool = new List<RegionNeuron>();
+			var eligible = Region.Brain.Regions
 									 .Where(region => region.Level < Region.Level) // TODO: only select some regions, those nearby
 									 .SelectMany(region => region.Neurons);
-			}
 			var maxdistance = eligible.Max(neuron => neuron.Coordinates.GetDistance(this));
 			foreach (var neuron in eligible)
 			{
