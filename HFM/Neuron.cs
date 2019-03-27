@@ -5,12 +5,14 @@ namespace HFM
 {
 	public class Neuron
 	{
-		public Neuron(int x, int y, int z)
+		public Neuron(Region region, int x, int y, int z)
 		{
+			Region = region;
 			Coordinates = new Coordinates(x, y, z);
 		}
 
 		public Coordinates Coordinates;
+		public Region Region;
 		public List<Synapse> ProximalSynapses = new List<Synapse>();
 		public List<Synapse> BasalSynapses = new List<Synapse>();
 		public List<Synapse> ApicalSynapses = new List<Synapse>();
@@ -36,7 +38,7 @@ namespace HFM
 						|| ApicalSynapses.Count(x => x.IsActive) >=
 									Constants.NUMBER_OF_APICAL_SYNAPSES_TO_ACTIVATE;
 
-		private bool IsInhibitedByItsOwnColumn => Brain.Neurons
+		private bool IsInhibitedByItsOwnColumn => Region.Neurons
 													  .Where(neuron => neuron.Coordinates.X == this.Coordinates.X
 																	 && neuron.Coordinates.Y == this.Coordinates.Y)
 													  .Any(neuron => neuron.IsPreactivated && !this.IsPreactivated);
@@ -46,7 +48,7 @@ namespace HFM
 		{
 			get
 			{
-				var nearColumnsFeedForwardScores = Brain.Neurons
+				var nearColumnsFeedForwardScores = Region.Neurons
 													   .Where(neuron => neuron.Coordinates.Z == this.Coordinates.Z) // Selecting neurons with same z works because neurons in a column share the same proximal receptive field
 													   .Where(neuron => neuron.Coordinates.GetDistance(this) <= Constants.COLUMNAR_INHIBITION_DISTANCE)
 													   .Select(neuron => neuron.ProximalReceptiveField.Count(n => n.IsFiring))

@@ -6,36 +6,31 @@ namespace HFM
 {
 	public class Brain
 	{
+		public Brain(List<Stimulus> environment)
+		{
+			Environment = environment;
+			Regions.Add(new Region(environment, 0));
+			foreach (var region in Regions)
+			{
+				region.CreateDimensions(Environment);
+				region.CreateNeurons();
+			}
+		}
+
 		public void ProcessNextStimulus(Stimulus stimulus)
 		{
 			// TODO: write code to process the stimulus
-			foreach (var neuron in Neurons) neuron.SetFiringStatus();
-		}
 
-		private static List<SensorialDimension> GetDimensions(IEnumerable<Stimulus> stimuli)
-		{
-			var dimensions = new List<SensorialDimension>();
-			var sensoryInputs = stimuli.SelectMany(x => x.SensoryInputs)
-									   .Where(x => string.IsNullOrEmpty(x.Label));
-			CreateOrAdjustDimensions(dimensions, sensoryInputs);
-			foreach (var dimension in dimensions)
+			foreach (var region in Regions)
 			{
-				if (dimension.MinValue == dimension.MaxValue) { dimension.MinValue = 0; } // Binary dimension
-			}
-			return dimensions;
-		}
-
-		private static void CreateOrAdjustDimensions(List<SensorialDimension> dimensions, IEnumerable<SensoryInput> sensoryInputs)
-		{
-			foreach (var input in sensoryInputs)
-			{
-				if (!dimensions.Any(x => x.Name == input.Dimension)) { dimensions.Add(new SensorialDimension(input.Dimension)); }
-				var dimension = dimensions.Single(x => x.Name == input.Dimension);
-				if (dimension.MinValue > input.Intensity) { dimension.MinValue = input.Intensity; }
-				if (dimension.MaxValue < input.Intensity) { dimension.MaxValue = input.Intensity; }
+				foreach (var neuron in region.Neurons)
+				{
+					neuron.SetFiringStatus();
+				}
 			}
 		}
 
-		public static List<Neuron> Neurons = new List<Neuron>();
+		public List<Region> Regions = new List<Region>();
+		public List<Stimulus> Environment = new List<Stimulus>();
 	};
 }

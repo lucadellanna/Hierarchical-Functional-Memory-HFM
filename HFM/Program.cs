@@ -8,7 +8,7 @@ namespace HFM
 		static void Main()
 		{
 			var stimuli = GetStimuli();
-			var Brain = new Brain();
+			var Brain = new Brain(stimuli);
 			for (int i = 0; i < stimuli.Count; i++)
 			{
 				Brain.ProcessNextStimulus(stimuli[i]);
