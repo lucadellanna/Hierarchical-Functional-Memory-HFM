@@ -19,24 +19,25 @@ namespace HFM
 		public List<Neuron> BasalReceptiveField => BasalSynapses.Select(x => x.AxonFrom).ToList();
 		public List<Neuron> ApicalReceptiveField => ApicalSynapses.Select(x => x.AxonFrom).ToList();
 
-		public bool IsActive
-		{
-			get
-			{
-				return ProximalSynapses.Count(x => x.IsActive) >=
-									   Constants.NUMBER_OF_PROXIMAL_SYNAPSES_TO_ACTIVATE;
-			}
-		}
+		public bool IsFiring { get { return _isFiring; } private set { _isFiring = value; } }
+		private bool _isFiring;
 
-		public bool IsPreactivated
-		{
-			get
-			{
-				return BasalSynapses.Count(x => x.IsActive) >=
+		public void SetFiringStatus() { _isFiring = IsActive; } // triggered at each Brain.ProcessNewStimulus
+
+		public bool IsActive => ProximalSynapses.Count(x => x.IsActive) >=
+									   Constants.NUMBER_OF_PROXIMAL_SYNAPSES_TO_ACTIVATE
+					   && !GetIsInhibited();
+
+		public bool IsPreactivated => BasalSynapses.Count(x => x.IsActive) >=
 									Constants.NUMBER_OF_BASAL_SYNAPSES_TO_ACTIVATE
-									|| ApicalSynapses.Count(x => x.IsActive) >=
+						|| ApicalSynapses.Count(x => x.IsActive) >=
 									Constants.NUMBER_OF_APICAL_SYNAPSES_TO_ACTIVATE;
-			}
+
+		public bool GetIsInhibited()
+		{
+			var neuronsInColumn = Brain.Neurons.Where(neuron => neuron.Coordinates.X == this.Coordinates.X &&
+													  neuron.Coordinates.Y == this.Coordinates.Y);
+			return neuronsInColumn.Any(neuron => neuron.IsPreactivated && !this.IsPreactivated);
 		}
 	}
 }
