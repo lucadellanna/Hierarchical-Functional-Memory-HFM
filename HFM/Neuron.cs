@@ -136,7 +136,7 @@ namespace HFM
 			IEnumerable<Neuron> eligible;
 			if (Region.Level == 0)
 			{
-				throw new NotImplementedException(); // Connect to SDR
+				throw new NotImplementedException(); // Region is at lowest level & thus connects to SDR
 			}
 			else
 			{

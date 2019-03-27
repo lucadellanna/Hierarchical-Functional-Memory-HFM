@@ -6,14 +6,14 @@ namespace HFM
 {
 	public class Brain
 	{
-		public Brain(List<Stimulus> environment)
+		public Brain(List<Stimulus> stimuli)
 		{
-			Environment = environment;
-			Regions.Add(new Region(this, environment, 0));
-			Regions.Add(new Region(this, environment, 1)); // TODO: this region's environment is different
+			SDR.Initialize(stimuli);
+			Regions.Add(new Region(this, stimuli, 0));
+			Regions.Add(new Region(this, stimuli, 1)); // TODO: this region's stimuli is different
 			foreach (var region in Regions)
 			{
-				region.CreateDimensions(Environment);
+				region.CreateDimensions(stimuli);
 				region.CreateNeurons();
 			}
 			foreach (var region in Regions)
@@ -36,6 +36,6 @@ namespace HFM
 		}
 
 		public List<Region> Regions = new List<Region>();
-		public List<Stimulus> Environment = new List<Stimulus>();
+		public SDR SDR = new SDR();
 	};
 }
