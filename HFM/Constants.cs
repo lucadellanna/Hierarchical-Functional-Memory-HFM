@@ -21,6 +21,7 @@ namespace HFM
 
 		// IN GENERAL:
 		public const int NUMBER_OF_DISTAL_SYNAPSES_TO_PREDICT = 5;
+		public const int COLUMNAR_INHIBITION_DISTANCE = 5;
 
 		// NEURONS
 		public const int COLUMNATE_WIDTH = 5;

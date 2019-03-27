@@ -6,7 +6,11 @@ namespace HFM
 {
 	public class Brain
 	{
-		public void ProcessNextStimulus(Stimulus stimulus) => throw new NotImplementedException();
+		public void ProcessNextStimulus(Stimulus stimulus)
+		{
+			// TODO: write code to process the stimulus
+			foreach (var neuron in Neurons) neuron.SetFiringStatus();
+		}
 
 		private static List<SensorialDimension> GetDimensions(IEnumerable<Stimulus> stimuli)
 		{
@@ -31,5 +35,7 @@ namespace HFM
 				if (dimension.MaxValue < input.Intensity) { dimension.MaxValue = input.Intensity; }
 			}
 		}
+
+		public static List<Neuron> Neurons = new List<Neuron>();
 	};
 }

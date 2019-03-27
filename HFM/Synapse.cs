@@ -22,7 +22,7 @@ namespace HFM
 
 		public readonly Neuron AxonFrom;
 
-		public bool IsActive { get { return AxonFrom.IsActive && Permanence >= 0.7; } }
+		public bool IsActive { get { return AxonFrom.IsFiring && Permanence >= 0.7; } }
 
 		#region Permanence
 
