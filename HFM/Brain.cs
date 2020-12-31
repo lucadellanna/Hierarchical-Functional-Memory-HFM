@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HFM
 {
@@ -22,12 +23,32 @@ namespace HFM
 
 		public void ProcessNextStimulus(Stimulus stimulus)
 		{
+			LogSDRoutput();
 			foreach (var region in Regions)
 			{
 				foreach (var neuron in region.Neurons)
 				{
 					neuron.SetFiringStatus();
 				}
+				LogRegionOutput(region);
+			}
+		}
+
+		private static void LogRegionOutput(Region region)
+		{
+			Console.WriteLine($"Output of Level {region.Level} is: ");
+			foreach (var neuron in region.Neurons)
+			{
+				Console.Write(neuron.IsFiring);
+			}
+		}
+
+		private static void LogSDRoutput()
+		{
+			Console.WriteLine($"Output of the SDR is: ");
+			foreach (var neuron in SDR.Neurons)
+			{
+				Console.Write(neuron.IsFiring);
 			}
 		}
 

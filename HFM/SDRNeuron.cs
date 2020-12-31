@@ -1,6 +1,6 @@
 ﻿namespace HFM
 {
-	public class SDRNeuron
+	public class SDRNeuron : Neuron
 	{
 		public SDRNeuron(int x, int y, int z = 0)
 		{

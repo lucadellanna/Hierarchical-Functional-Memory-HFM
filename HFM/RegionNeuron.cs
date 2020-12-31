@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HFM
 {
-	public class RegionNeuron
+	public class RegionNeuron : Neuron
 	{
 		public RegionNeuron(Region region, int x, int y, int z)
 		{
@@ -133,9 +133,17 @@ namespace HFM
 		{
 			var random = new Random();
 			var pool = new List<RegionNeuron>();
-			var eligible = Region.Brain.Regions
-									 .Where(region => region.Level < Region.Level) // TODO: only select some regions, those nearby
-									 .SelectMany(region => region.Neurons);
+			var eligible = new List<Neuron>();
+			if (Region.Level == 0)
+			{
+				eligible = Region.Brain.SDR.Neurons;
+			}
+			else
+			{
+				eligible = Region.Brain.Regions
+										 .Where(region => region.Level < Region.Level) // TODO: only select some regions, those nearby
+										 .SelectMany(region => region.Neurons);
+			}
 			var maxdistance = eligible.Max(neuron => neuron.Coordinates.GetDistance(this));
 			foreach (var neuron in eligible)
 			{

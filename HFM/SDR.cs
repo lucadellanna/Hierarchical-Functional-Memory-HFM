@@ -48,15 +48,14 @@ namespace HFM
 
 		private void CreateDimensions(IEnumerable<Stimulus> stimuli)
 		{
-			var dimensions = new List<SensorialDimension>();
 			var sensoryInputs = stimuli.SelectMany(x => x.SensoryInputs)
-									   .Where(x => string.IsNullOrEmpty(x.Label));
+									   // .Where(x => string.IsNullOrEmpty(x.Label))
+									   ;
 			UpdateDimensions(sensoryInputs);
-			foreach (var dimension in dimensions)
+			foreach (var dimension in Dimensions)
 			{
 				if (dimension.MinValue == dimension.MaxValue) { dimension.MinValue = 0; } // Binary dimension
 			}
-			Dimensions = dimensions;
 		}
 
 		private void UpdateDimensions(IEnumerable<SensoryInput> sensoryInputs)
